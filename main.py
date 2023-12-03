@@ -53,8 +53,7 @@ def customer_data_parsing(root):
 def invoice_items(root):
     invoice_general_items = root.findall(".//cac:InvoiceLine", namespace)
 
-    ws.append(excel_data)
-
+    first = True
     start_index_item = len(excel_data)
 
     invoice_list = []
@@ -75,7 +74,13 @@ def invoice_items(root):
 
         item_data = [item_name.text, item_percentage.text, item_quantity_full,
                      item_price_full, item_total_full, item_tva]
-        invoice_list.append(item_data)
+        if (first):
+            excel_data[start_index_item:start_index_item] = item_data
+            ws.append(excel_data)
+            first = False
+        else:
+            invoice_list.append(item_data)
+
     for item_data in invoice_list:
         row_data = [""] * start_index_item + item_data
         ws.append(row_data)
